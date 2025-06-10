@@ -1,0 +1,110 @@
+### Go ###
+# Binaries for programs and plugins
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+__debug_bin
+*.tmp
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool, specifically when used with LiteIDE
+*.out
+
+# Go workspace file
+go.work
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+
+### Node.js & Web ###
+# Dependencies
+node_modules/
+.pnpm-store/
+.npm/
+web-build/
+dist/
+dist-ssr/
+build/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/settings.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.project
+.classpath
+*.launch
+.settings/
+
+# Testing
+coverage/
+.nyc_output/
+
+# Local files
+*.local
+
+### Database ###
+*.db
+*.sql
+*.sqlite
+*.sqlite3
+!**/migrations/*.sql
+!**/db/init.sql
+
+### Docker ###
+.docker/data/
+
+### OS specific ###
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+.Trash-*
+
+### Others ###
+tmp/
+temp/
+.cache/
+.parcel-cache/
+.next/
+.nuxt/
+.yarn/
+.bundle/
+*.tgz
+.netlify
+.vercel
