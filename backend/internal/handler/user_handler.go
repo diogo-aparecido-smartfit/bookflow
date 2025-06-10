@@ -214,19 +214,59 @@ func (h *UserHandler) Login(c *gin.Context) {
         return
     }
     
-    // Em uma aplicação real, aqui seria gerado um token JWT
     response := struct {
         User  *domain.User `json:"user"`
         Token string       `json:"token"`
     }{
         User:  user,
-        Token: "dummy-token", // Em uma aplicação real, seria um JWT válido
+        Token: "token123", 
     }
     
     c.JSON(http.StatusOK, response)
 }
 
-// RegisterRoutes registra as rotas no router do Gin
+// Register godoc
+// @Summary      Register a new user
+// @Description  Create a new user account with email and password
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Param        user  body      object  true  "Registration information"
+// @Param        name        body      string  true  "User name" example:"John Doe"
+// @Param        email       body      string  true  "User email" example:"john.doe@example.com"
+// @Param        password    body      string  true  "User password" example:"password123"
+// @Success      201  {object}  object{user=domain.User}
+// @Failure      400  {object}  handler.ErrorResponse
+// @Failure      500  {object}  handler.ErrorResponse
+// @Router       /register [post]
+func (h *UserHandler) Register(c *gin.Context) {
+    var user domain.User
+    
+    if err := c.ShouldBindJSON(&user); err != nil {
+        c.JSON(http.StatusBadRequest, gin.H{"error": "invalid request body"})
+        return
+    }
+    
+    if err := h.userService.CreateUser(c.Request.Context(), &user); err != nil {
+        if err == domain.ErrInvalidInput {
+            c.JSON(http.StatusBadRequest, gin.H{"error": "invalid input or email already exists"})
+            return
+        }
+        c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+        return
+    }
+    
+    user.Password = ""
+    
+    response := struct {
+        User *domain.User `json:"user"`
+    }{
+        User: &user,
+    }
+    
+    c.JSON(http.StatusCreated, response)
+}
+
 func (h *UserHandler) RegisterRoutes(router *gin.RouterGroup) {
     users := router.Group("/users")
     {
@@ -238,4 +278,5 @@ func (h *UserHandler) RegisterRoutes(router *gin.RouterGroup) {
     }
     
     router.POST("/login", h.Login)
+    router.POST("/register", h.Register)
 }
