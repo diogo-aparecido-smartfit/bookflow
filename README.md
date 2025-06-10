@@ -2,8 +2,6 @@
 
 BookFlow é um sistema de gerenciamento de biblioteca que permite catalogar, rastrear e gerenciar uma coleção de livros. O sistema é composto por um backend em Go com uma API RESTful e um frontend em React com TypeScript.
 
-![BookFlow Logo](./assets/bookflow-logo.png)
-
 ## 📋 Índice
 
 - [Visão Geral](#visão-geral)

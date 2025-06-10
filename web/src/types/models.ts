@@ -4,10 +4,10 @@ export interface Book {
   author: string;
   isbn: string;
   description: string;
-  coverUrl: string;
+  cover_url: string;
   status: "available" | "borrowed" | "lost";
-  createdAt: string;
-  updatedAt: string;
+  created_at: string;
+  updated_at: string;
 }
 
 export interface User {

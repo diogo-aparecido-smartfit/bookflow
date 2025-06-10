@@ -1,27 +1,9 @@
-import { bookService } from "@/api/book.service";
+import { Link } from "react-router-dom";
 import { BookCard } from "@/components/book-card/book-card.component";
-import type { Book } from "@/types/models";
-import { useEffect, useState } from "react";
+import { useHome } from "./home.controller";
 
 export function HomePage() {
-  const [books, setBooks] = useState<Book[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        setLoading(true);
-        const data = await bookService.getAll();
-        setBooks(data);
-      } catch (error) {
-        console.error("Failed to fetch books:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBooks();
-  }, []);
+  const { books, loading, error } = useHome();
 
   if (loading) {
     return (
@@ -31,21 +13,45 @@ export function HomePage() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="container mx-auto px-4 py-8">
+        <div className="bg-red-50 text-red-800 p-4 rounded-md">
+          <h3 className="text-lg font-medium">Erro</h3>
+          <p>{error}</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-3xl font-bold text-gray-800">BookFlow Library</h1>
+        <h1 className="text-3xl font-bold text-gray-800">
+          Biblioteca BookFlow
+        </h1>
+        <Link
+          to="/books/new"
+          className="px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+        >
+          Adicionar novo livro
+        </Link>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {books.length > 0 ? (
-          books.map((book) => <BookCard key={book.id} book={book} />)
-        ) : (
-          <p className="text-gray-500 col-span-full text-center py-8">
-            No books found in the library.
+      {books.length === 0 ? (
+        <div className="bg-yellow-50 text-yellow-800 p-4 rounded-md">
+          <h3 className="text-lg font-medium">Sem livros em estoque</h3>
+          <p>
+            Sua biblioteca está vazia. Adicione seu primeiro livro para começar!
           </p>
-        )}
-      </div>
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          {books.map((book) => (
+            <BookCard key={book.id} book={book} />
+          ))}
+        </div>
+      )}
     </div>
   );
 }

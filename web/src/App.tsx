@@ -9,8 +9,10 @@ import { Layout } from "./components/layout/layout.component";
 import { HomePage } from "./pages/home-page/home.page";
 import { LoginPage } from "./pages/login-page/login.page";
 import { RegisterPage } from "./pages/register-page/register.page";
+import { BookDetailPage } from "./pages/book-details-page/book-details.page";
+import { BookCreatePage } from "./pages/book-create-page/book-create.page";
+import { EditBookPage } from "./pages/edit-book-page/edit-book.page";
 
-// Componente para rotas protegidas
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = authService.isAuthenticated();
 
@@ -21,7 +23,6 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
-// Componente para rotas públicas (só acessíveis se NÃO estiver autenticado)
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const isAuthenticated = authService.isAuthenticated();
 
@@ -37,7 +38,6 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          {/* Rotas públicas */}
           <Route
             path="/login"
             element={
@@ -56,7 +56,6 @@ function App() {
             }
           />
 
-          {/* Rotas protegidas */}
           <Route
             path="/"
             element={
@@ -79,25 +78,28 @@ function App() {
             path="/books/new"
             element={
               <ProtectedRoute>
-                <div className="container mx-auto p-4">
-                  <h1>Add New Book</h1>
-                </div>
+                <BookCreatePage />
               </ProtectedRoute>
             }
           />
 
           <Route
-            path="/profile"
+            path="/books/:id"
             element={
               <ProtectedRoute>
-                <div className="container mx-auto p-4">
-                  <h1>User Profile</h1>
-                </div>
+                <BookDetailPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/books/:id/edit"
+            element={
+              <ProtectedRoute>
+                <EditBookPage />
               </ProtectedRoute>
             }
           />
 
-          {/* Rota 404 - redireciona para login se não autenticado ou para home se autenticado */}
           <Route
             path="*"
             element={
