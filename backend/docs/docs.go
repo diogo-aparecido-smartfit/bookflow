@@ -276,25 +276,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object"
-                        }
-                    },
-                    {
-                        "description": "User email",
-                        "name": "email",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "User password",
-                        "name": "password",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.UserLoginRequest"
                         }
                     }
                 ],
@@ -308,7 +290,7 @@ const docTemplate = `{
                                     "type": "string"
                                 },
                                 "user": {
-                                    "$ref": "#/definitions/domain.User"
+                                    "$ref": "#/definitions/dto.UserResponse"
                                 }
                             }
                         }
@@ -343,39 +325,12 @@ const docTemplate = `{
                 "summary": "Register a new user",
                 "parameters": [
                     {
-                        "description": "Registration information",
-                        "name": "user",
+                        "description": "User registration data",
+                        "name": "registration",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "type": "object"
-                        }
-                    },
-                    {
-                        "description": "User name",
-                        "name": "name",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "User email",
-                        "name": "email",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
-                        }
-                    },
-                    {
-                        "description": "User password",
-                        "name": "password",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "type": "string"
+                            "$ref": "#/definitions/dto.UserRegistrationRequest"
                         }
                     }
                 ],
@@ -386,7 +341,7 @@ const docTemplate = `{
                             "type": "object",
                             "properties": {
                                 "user": {
-                                    "$ref": "#/definitions/domain.User"
+                                    "$ref": "#/definitions/dto.UserResponse"
                                 }
                             }
                         }
@@ -727,6 +682,69 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "description": "Data de atualização do registro",
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UserLoginRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "joao.silva@example.com"
+                },
+                "password": {
+                    "type": "string",
+                    "example": "senha123"
+                }
+            }
+        },
+        "dto.UserRegistrationRequest": {
+            "type": "object",
+            "required": [
+                "email",
+                "name",
+                "password"
+            ],
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "example": "joao.silva@example.com"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "João Silva"
+                },
+                "password": {
+                    "type": "string",
+                    "minLength": 6,
+                    "example": "senha123"
+                }
+            }
+        },
+        "dto.UserResponse": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "type": "string"
+                },
+                "email": {
+                    "type": "string",
+                    "example": "joao.silva@example.com"
+                },
+                "id": {
+                    "type": "string",
+                    "example": "a4b8c16e-1d2e-3f4g-5h6i-7j8k9l0m1n2o"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "João Silva"
+                },
+                "updated_at": {
                     "type": "string"
                 }
             }

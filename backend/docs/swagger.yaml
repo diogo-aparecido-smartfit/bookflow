@@ -70,6 +70,51 @@ definitions:
     - email
     - name
     type: object
+  dto.UserLoginRequest:
+    properties:
+      email:
+        example: joao.silva@example.com
+        type: string
+      password:
+        example: senha123
+        type: string
+    required:
+    - email
+    - password
+    type: object
+  dto.UserRegistrationRequest:
+    properties:
+      email:
+        example: joao.silva@example.com
+        type: string
+      name:
+        example: João Silva
+        type: string
+      password:
+        example: senha123
+        minLength: 6
+        type: string
+    required:
+    - email
+    - name
+    - password
+    type: object
+  dto.UserResponse:
+    properties:
+      created_at:
+        type: string
+      email:
+        example: joao.silva@example.com
+        type: string
+      id:
+        example: a4b8c16e-1d2e-3f4g-5h6i-7j8k9l0m1n2o
+        type: string
+      name:
+        example: João Silva
+        type: string
+      updated_at:
+        type: string
+    type: object
   handler.ErrorResponse:
     properties:
       error:
@@ -254,19 +299,7 @@ paths:
         name: credentials
         required: true
         schema:
-          type: object
-      - description: User email
-        in: body
-        name: email
-        required: true
-        schema:
-          type: string
-      - description: User password
-        in: body
-        name: password
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/dto.UserLoginRequest'
       produces:
       - application/json
       responses:
@@ -277,7 +310,7 @@ paths:
               token:
                 type: string
               user:
-                $ref: '#/definitions/domain.User'
+                $ref: '#/definitions/dto.UserResponse'
             type: object
         "400":
           description: Bad Request
@@ -296,30 +329,12 @@ paths:
       - application/json
       description: Create a new user account with email and password
       parameters:
-      - description: Registration information
+      - description: User registration data
         in: body
-        name: user
+        name: registration
         required: true
         schema:
-          type: object
-      - description: User name
-        in: body
-        name: name
-        required: true
-        schema:
-          type: string
-      - description: User email
-        in: body
-        name: email
-        required: true
-        schema:
-          type: string
-      - description: User password
-        in: body
-        name: password
-        required: true
-        schema:
-          type: string
+          $ref: '#/definitions/dto.UserRegistrationRequest'
       produces:
       - application/json
       responses:
@@ -328,7 +343,7 @@ paths:
           schema:
             properties:
               user:
-                $ref: '#/definitions/domain.User'
+                $ref: '#/definitions/dto.UserResponse'
             type: object
         "400":
           description: Bad Request

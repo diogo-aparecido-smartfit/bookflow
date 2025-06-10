@@ -26,7 +26,7 @@ export const authService = {
   register: async (
     user: Omit<User, "id" | "createdAt" | "updatedAt"> & { password: string }
   ) => {
-    const response = await apiClient.post<User>("/users", user);
+    const response = await apiClient.post("/register", user);
     return response.data;
   },
 

@@ -1,34 +1,20 @@
-import { useState, useEffect } from "react";
-import { Link, useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { authService } from "@/api/auth.service";
 
-export function LoginPage() {
+export function RegisterPage() {
   const navigate = useNavigate();
-  const location = useLocation();
-  const [credentials, setCredentials] = useState({
+  const [user, setUser] = useState({
+    name: "",
     email: "",
     password: "",
   });
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (authService.isAuthenticated()) {
-      navigate("/");
-    }
-
-    const justRegistered = new URLSearchParams(location.search).get(
-      "registered"
-    );
-    if (justRegistered === "true") {
-      setSuccess("Account created successfully! Please sign in.");
-    }
-  }, [navigate, location]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    setCredentials((prev) => ({ ...prev, [name]: value }));
+    setUser((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -37,14 +23,13 @@ export function LoginPage() {
     try {
       setLoading(true);
       setError("");
-      setSuccess("");
 
-      await authService.login(credentials);
-      navigate("/");
+      await authService.register(user);
+      navigate("/login?registered=true");
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       setError(
-        error.response?.data?.error || "Login failed. Please try again."
+        error.response?.data?.error || "Registration failed. Please try again."
       );
     } finally {
       setLoading(false);
@@ -55,8 +40,8 @@ export function LoginPage() {
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-md">
         <div className="text-center">
-          <h2 className="text-3xl font-bold text-gray-800">Welcome Back</h2>
-          <p className="mt-2 text-gray-600">Sign in to your account</p>
+          <h2 className="text-3xl font-bold text-gray-800">Create Account</h2>
+          <p className="mt-2 text-gray-600">Join BookFlow today</p>
         </div>
 
         {error && (
@@ -65,14 +50,26 @@ export function LoginPage() {
           </div>
         )}
 
-        {success && (
-          <div className="bg-green-50 text-green-800 p-3 rounded-md text-sm">
-            {success}
-          </div>
-        )}
-
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="space-y-4">
+            <div>
+              <label
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Full Name
+              </label>
+              <input
+                id="name"
+                name="name"
+                type="text"
+                required
+                value={user.name}
+                onChange={handleChange}
+                className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
+              />
+            </div>
+
             <div>
               <label
                 htmlFor="email"
@@ -85,7 +82,7 @@ export function LoginPage() {
                 name="email"
                 type="email"
                 required
-                value={credentials.email}
+                value={user.email}
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -103,7 +100,7 @@ export function LoginPage() {
                 name="password"
                 type="password"
                 required
-                value={credentials.password}
+                value={user.password}
                 onChange={handleChange}
                 className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
               />
@@ -116,18 +113,18 @@ export function LoginPage() {
               disabled={loading}
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              {loading ? "Signing in..." : "Sign in"}
+              {loading ? "Creating account..." : "Create Account"}
             </button>
           </div>
 
           <div className="text-center text-sm">
             <p className="text-gray-600">
-              Don't have an account?{" "}
+              Already have an account?{" "}
               <Link
-                to="/register"
+                to="/login"
                 className="text-indigo-600 hover:text-indigo-500"
               >
-                Register here
+                Sign in
               </Link>
             </p>
           </div>

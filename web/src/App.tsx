@@ -8,6 +8,7 @@ import { authService } from "./api/auth.service";
 import { Layout } from "./components/layout/layout.component";
 import { HomePage } from "./pages/home-page/home.page";
 import { LoginPage } from "./pages/login-page/login.page";
+import { RegisterPage } from "./pages/register-page/register.page";
 
 // Componente para rotas protegidas
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
@@ -36,7 +37,7 @@ function App() {
     <Router>
       <Layout>
         <Routes>
-          {/* Rota de login só acessível se não estiver autenticado */}
+          {/* Rotas públicas */}
           <Route
             path="/login"
             element={
@@ -46,19 +47,34 @@ function App() {
             }
           />
 
-          {/* Rota de registro só acessível se não estiver autenticado */}
           <Route
             path="/register"
             element={
               <PublicRoute>
-                <div className="container mx-auto p-4">
-                  <h1>Register Page</h1>
-                </div>
+                <RegisterPage />
               </PublicRoute>
             }
           />
 
           {/* Rotas protegidas */}
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/books"
+            element={
+              <ProtectedRoute>
+                <HomePage />
+              </ProtectedRoute>
+            }
+          />
+
           <Route
             path="/books/new"
             element={
@@ -81,12 +97,17 @@ function App() {
             }
           />
 
-          {/* Rota pública da página inicial */}
-          <Route path="/" element={<HomePage />} />
-          <Route path="/books" element={<HomePage />} />
-
-          {/* Rota 404 */}
-          <Route path="*" element={<Navigate to="/" />} />
+          {/* Rota 404 - redireciona para login se não autenticado ou para home se autenticado */}
+          <Route
+            path="*"
+            element={
+              authService.isAuthenticated() ? (
+                <Navigate to="/" />
+              ) : (
+                <Navigate to="/login" />
+              )
+            }
+          />
         </Routes>
       </Layout>
     </Router>
